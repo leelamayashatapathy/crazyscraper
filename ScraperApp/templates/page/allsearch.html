@@ -1,0 +1,85 @@
+{% extends 'page/base.html' %}
+{% load static %}
+{% block title %}All Result{% endblock %}
+
+{% block body %}
+<!--<form method="GET" action=''>-->
+<!--  {% csrf_token %}-->
+<!--  <a href="{% url 'download_data' %}" class="btn btn-outline-info" name="download" id="download">Get All Scrapped Data</a>-->
+<!--</form>-->
+<section class="py-2 float-right container">
+<a href="{% url 'download_data' %}" class="btn btn-outline-info" name="download" id="download">Download Scrap Excel</a>
+</section>
+<section class="py-5 text-center container">
+    <h1 class="text-info"> <b>ALL SCRAPED DATA</b> </h1>
+</section>
+<!--<div class="table-responsive">-->
+{% for data in  scrape_data  %}
+<table class="table align-middle mb-0 bg-white">
+  <thead class="bg-light">
+    <tr>
+      <th>Image</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Rating</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+          <img
+              src="{{ data.image }}"
+              alt=""
+              style="width: 200px; height: 200px"
+              />
+<!--              class="rounded-circle"-->
+
+<!--          <div class="ms-3">-->
+<!--            <p class="fw-bold mb-1">John Doe</p>-->
+<!--            <p class="text-muted mb-0">john.doe@gmail.com</p>-->
+<!--          </div>-->
+        </div>
+      <td>
+        <p class="fw-normal mb-1">{{ data.product_name }}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1" >{{ data.price }}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1" >{{ data.category }}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1" >In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1">{{ data.rating }}</p>
+      </td>
+      <td>
+        <a href="{{ data.url }}" class="link-primary">URL Link</a>
+
+      </td>
+    </tr>
+
+</tbody>
+
+</table>
+{% endfor %}
+<div>
+<center>
+    {%if page_obj.has_previous %} {# whether the previous page exists #}
+        <a href="?page={{page_obj.previous_page_number}}"><</a> {# link to the prev page #}
+    {% endif %}
+    <span>{{page_obj.number}}</span> {# the current page number #}
+
+    {%if page_obj.has_next %} {# whether the next page exists #}
+        <a href="?page={{page_obj.next_page_number}}">></a> {# link to the next page #}
+    {% endif %}
+
+</center>
+</div>
+<!--</div>-->
+{% endblock %}

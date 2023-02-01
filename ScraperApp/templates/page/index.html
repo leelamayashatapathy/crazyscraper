@@ -1,0 +1,72 @@
+{% extends 'page/base.html' %}
+{% load static %}
+{% block title %}Scrap{% endblock %}
+
+{% block body %}
+<section class="py-2 float-right container">
+    <a href="{% url 'scraped_list' %}" class="btn btn-outline-info">Get All Scrapped Data</a>
+    </section>
+    <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light"><span class="text-info"><b>Scrape</b></span><b> Here</b><span class="text-info"><b> !</b></span></h1>
+        <form method="POST" action=''>
+          {% csrf_token %}
+        <input class="form-control border border-info" type="text" placeholder="Enter Your URL Here.."  name="searchurl" id="searchurl" required>
+        <button type="submit" class="btn btn-dark my-2" >Get Data</button>
+        </form>
+        <p>shortn your URL! copy till ?</p>
+        <p class="text-dark"> This Website is an Extraordinary platform that allows users to extract and collect product information from the Flipkart e-commerce website. This tool enables users to scrape data such as product names, prices, descriptions, ratings, and images.</p>
+      </div>
+    </div>
+  </section>
+
+{% if scraped_data  %}
+  <table class="table align-middle mb-0 bg-white" >
+  <thead class="bg-light">
+    <tr>
+      <th>Image</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th>Rating</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+          <img
+              src="{{ scraped_data.product_image }}"
+              alt=""
+              style="width: 200px; height: 200px"
+              />
+<!--              class="rounded-circle"-->
+
+<!--          <div class="ms-3">-->
+<!--            <p class="fw-bold mb-1">John Doe</p>-->
+<!--            <p class="text-muted mb-0">john.doe@gmail.com</p>-->
+<!--          </div>-->
+        </div>
+      <td>
+        <p class="fw-normal mb-1">{{ scraped_data.product_name }}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1" >{{ scraped_data.product_price }}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1" >In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1">{{ scraped_data.product_rating }}</p>
+      </td>
+      <td>
+        <p class="fw-normal mb-1">{{ scraped_data.prod_url }}</p>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}
