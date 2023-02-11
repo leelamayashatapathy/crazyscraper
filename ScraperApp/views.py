@@ -3,8 +3,13 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .models import ScrapeData
 import requests
+from django.views.decorators.csrf import csrf_exempt
 from bs4 import BeautifulSoup as bs
 import xlwt
+from .serializers import ScrapeDataSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.core.paginator import Paginator
 
 
@@ -13,6 +18,7 @@ def insert_data(scraped_prod_data):
     obj = ScrapeData()
     obj.url = scraped_prod_data['prod_url']
     obj.category = scraped_prod_data['prod_category']
+    obj.product_desc = scraped_prod_data['description']
     obj.product_name = scraped_prod_data['product_name']
     obj.price = scraped_prod_data['product_price']
     obj.rating = scraped_prod_data['product_rating']
@@ -51,6 +57,16 @@ def scrape_url(link):
         print('product_rating:', None)
     print('rating:', rating)
 
+    #Description
+    desc = None
+    if soup.find('div', class_="_1mXcCf"):
+        desc = soup.find('div', class_="_1mXcCf").text
+    else:
+        print('product_rating:', None)
+    print('desc:', desc)
+    # desc = soup.find ('div', class_='_1mXcCf RmoJUa')
+    # print('desc:', desc.text)
+
     # Image
     image = None
     if soup.find('img', class_="_2r_T1I _396QI4"):
@@ -63,7 +79,7 @@ def scrape_url(link):
 
     scraped_data = {'prod_url': url_data.url, 'product_name': product_name, 'prod_category': product_category,
                          'product_price': product_price.text, 'product_rating': rating,
-                         'product_image': image}
+                         'product_image': image, 'description':desc}
 
     insert_data(scraped_data)
 
@@ -71,25 +87,33 @@ def scrape_url(link):
 
 
 # Function to Display All Scraped Data From Database
+@api_view(['GET'])
 def scraped_list(request):
-    data = ScrapeData.objects.all()
-    return render(request, 'page/allsearch.html', {'scrape_data': data})
-
-
-def get_url(request):
     if request.method == 'GET':
-        return render(request, 'page/index.html')
+        data = ScrapeData.objects.all()
+        serializer = ScrapeDataSerializer(data, many=True)
+        return Response(serializer.data)
+
+    # return render(request, 'page/allsearch.html', {'scrape_data': data})
+
+
+@csrf_exempt
+@api_view(['POST'])
+def get_url(request):
+    # if request.method == 'GET':
+    #     return render(request, 'page/index.html')
 
     if request.method == 'POST':
-        url_data = request.POST['searchurl']
+        url_data = request.data.get('url')
         print(url_data)
         if url_data == 'None':
-            messages.error(request, 'username or password not correct')
+            messages.error(request, 'hii')
         else:
             print(url_data)
 
             scraped_data = scrape_url(url_data)
-            return render(request, 'page/index.html', {'scraped_data': scraped_data})
+            return Response(scraped_data)
+            # return render(request, 'page/index.html', {'scraped_data': scraped_data})
 
 def download_data(request):
     scraped_data = ScrapeData.objects.all()

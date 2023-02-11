@@ -12,8 +12,8 @@
         <h1 class="fw-light"><span class="text-info"><b>Scrape</b></span><b> Here</b><span class="text-info"><b> !</b></span></h1>
         <form method="POST" action=''>
           {% csrf_token %}
-        <input class="form-control border border-info" type="text" placeholder="Enter Your URL Here.."  name="searchurl" id="searchurl" required>
-        <button type="submit" class="btn btn-dark my-2" >Get Data</button>
+        <input class="form-control border border-info" type="text" placeholder="Enter Your URL Here.."  required>
+        <button type="submit" class="btn btn-info my-2" >Get Data</button>
         </form>
         <p>shortn your URL! copy till ?</p>
         <p class="text-dark"> This Website is an Extraordinary platform that allows users to extract and collect product information from the Flipkart e-commerce website. This tool enables users to scrape data such as product names, prices, descriptions, ratings, and images.</p>
@@ -56,7 +56,7 @@
         <p class="fw-normal mb-1" >{{ scraped_data.product_price }}</p>
       </td>
       <td>
-        <p class="fw-normal mb-1" >In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available</p>
+        <p class="fw-normal mb-1" > {{ scraped_data.description }}</p>
       </td>
       <td>
         <p class="fw-normal mb-1">{{ scraped_data.product_rating }}</p>
